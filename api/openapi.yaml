@@ -1,0 +1,851 @@
+openapi: 3.0.1
+info:
+  description: Generate Token
+  title: Hub Token
+  version: v1.0.0
+servers:
+- description: Local Server Url
+  url: http://localhost:8087
+- description: Development Server Url
+  url: https://pp72.payumoney.com/paymentLink
+- description: UAT Server Url
+  url: https://uatoneapi.payu.in
+- description: Prod Server Url
+  url: https://oneapi.payu.in
+security:
+- OAuth2:
+  - create_payment_links
+  - read_payment_links
+tags:
+- description: Payment Link Apis
+  name: Payment Link
+- description: Generate token
+  name: Token
+paths:
+  /payment-links/{id}:
+    get:
+      operationId: getSinglePaymentLink
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Something went wrong
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: Details fetched successfully
+      summary: Get Single PaymentLink
+      tags:
+      - Payment Link
+      x-accepts: application/json
+    put:
+      operationId: changeStatusOrExpiry
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusOrExpiryDTO'
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: something went wrong
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: Changed successfully
+      summary: 'change status and expiry for paymentLink '
+      tags:
+      - Payment Link
+      x-contentType: application/json
+      x-accepts: application/json
+  /token:
+    post:
+      description: Get token
+      operationId: getToken
+      parameters:
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientTokenDTO'
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Bad Request
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Token Generated successfully
+      summary: get Token
+      tags:
+      - Token
+      x-contentType: application/json
+      x-accepts: application/json
+  /payment-links:
+    get:
+      operationId: getAllPaymentLink
+      parameters:
+      - explode: true
+        in: query
+        name: pageOffset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          default: 20
+          format: int32
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: orderBy
+        required: false
+        schema:
+          default: addedOn
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: asc
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: dateFrom
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: searchText
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: dateTo
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Something went wrong
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: Details fetched successfully
+      summary: Get all PaymentLinks
+      tags:
+      - Payment Link
+      x-accepts: application/json
+    post:
+      description: create single payment link
+      operationId: createPaymentLink
+      parameters:
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentLinkRequestDTO'
+        required: true
+      responses:
+        "400":
+          content: {}
+          description: Bad Request
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: Link Created successfully
+      summary: Create PaymentLinks
+      tags:
+      - Payment Link
+      x-contentType: application/json
+      x-accepts: application/json
+  /payment-links/{id}/share:
+    post:
+      operationId: sendPaymentLink
+      parameters:
+      - explode: true
+        in: query
+        name: channelList
+        required: true
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: something went wrong
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: PaymentLink Sent successfully
+      summary: send PaymentLink
+      tags:
+      - Payment Link
+      x-accepts: application/json
+  /payment-links/{id}/txns:
+    get:
+      operationId: getPaymentLinkTransactions
+      parameters:
+      - explode: true
+        in: query
+        name: pageOffset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          default: 20
+          format: int32
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: orderBy
+        required: false
+        schema:
+          default: addedOn
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: asc
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: dateFrom
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: searchText
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: searchTerm
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: dateTo
+        required: true
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Bad Request
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: Details fetched successfully
+      summary: Get Transaction details
+      tags:
+      - Payment Link
+      x-accepts: application/json
+  /payment-links/summary:
+    get:
+      operationId: summary
+      parameters:
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Something went wrong
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: summary fetched successfully
+      summary: Details of paymentlinks
+      tags:
+      - Payment Link
+      x-accepts: application/json
+  /payment-links/default-merchant-attributes:
+    get:
+      operationId: getMerchantCustomAttributes
+      parameters:
+      - description: merchant identifier
+        explode: false
+        in: header
+        name: mid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "400":
+          content: {}
+          description: Bad Request
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResultDTO'
+          description: Details fetched successfully
+      summary: Get Custom Attributes
+      tags:
+      - Payment Link
+      x-accepts: application/json
+components:
+  schemas:
+    StaticFieldDTO:
+      example:
+        notes: notes
+        termsAndConditions: termsAndConditions
+      properties:
+        termsAndConditions:
+          type: string
+        notes:
+          type: string
+      type: object
+    StatusOrExpiryDTO:
+      example:
+        staticFields:
+          notes: notes
+          termsAndConditions: termsAndConditions
+        active: true
+        expiry: expiry
+      properties:
+        active:
+          type: boolean
+        expiry:
+          type: string
+        staticFields:
+          $ref: '#/components/schemas/StaticFieldDTO'
+      type: object
+    ResultDTO:
+      example:
+        result: '{}'
+        errorCode: 6
+        guid: guid
+        message: message
+        status: 0
+      properties:
+        status:
+          format: int32
+          type: integer
+        message:
+          type: string
+        result:
+          type: object
+        errorCode:
+          format: int32
+          type: integer
+        guid:
+          type: string
+      type: object
+    ClientTokenDTO:
+      example:
+        grant_type: grant_type
+        client_secret: client_secret
+        scopes:
+        - scopes
+        - scopes
+        client_id: client_id
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        grant_type:
+          type: string
+        scopes:
+          items:
+            type: string
+          type: array
+      required:
+      - client_id
+      - client_secret
+      - grant_type
+      type: object
+    AddressDTO:
+      example:
+        country: country
+        zipCode: zipCode
+        city: city
+        state: state
+        line2: line2
+        line1: line1
+      properties:
+        line1:
+          type: string
+        line2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zipCode:
+          type: string
+      type: object
+    CustomAttributeDTO:
+      example:
+        customAttributeName: customAttributeName
+        toolId: 9
+        entityType: entityType
+        attributeType: attributeType
+        options:
+        - options
+        - options
+        customAttributeId: 7
+        checked: true
+        required: true
+      properties:
+        customAttributeId:
+          format: int32
+          type: integer
+        entityType:
+          type: string
+        toolId:
+          format: int32
+          type: integer
+        customAttributeName:
+          maxLength: 50
+          minLength: 0
+          type: string
+        attributeType:
+          type: string
+        options:
+          items:
+            type: string
+          type: array
+        checked:
+          type: boolean
+        required:
+          type: boolean
+      required:
+      - customAttributeName
+      type: object
+    CustomerDTO:
+      example:
+        phone: "9876543210"
+        name: John
+        email: test@gmail.com
+      properties:
+        name:
+          description: customer name
+          example: John
+          type: string
+        phone:
+          description: customer phone
+          example: "9876543210"
+          type: string
+        email:
+          description: customer email
+          example: test@gmail.com
+          type: string
+      type: object
+    PaymentLinkRequestDTO:
+      example:
+        isAmountFilledByCustomer: false
+        notes: notes
+        minAmountForCustomer: 800
+        discount: 0.8008281904610115
+        description: Car Insurance Premium
+        source: API
+        batchId: batchId
+        failureURL: failureURL
+        expiryDate: 2012-11-21 22:11:11
+        viaEmail: true
+        subAmount: 1000
+        smsConfirm: smsConfirm
+        scheduledFor: scheduledFor
+        invoiceNumber: INV8446471886220
+        currency: INR
+        shippingCharge: 25
+        enforcePayMethod: enforcePayMethod
+        timeUnit: timeUnit
+        address:
+          country: country
+          zipCode: zipCode
+          city: city
+          state: state
+          line2: line2
+          line1: line1
+        reminder:
+          modes:
+          - modes
+          - modes
+          schedulingInterval: 13
+          reminderType: 5
+          timeUnit: 2
+        maxPaymentsAllowed: 1
+        smsTemplateName: smsTemplateName
+        successURL: successURL
+        tax: 10
+        dropCategory: dropCategory
+        validationPeriod: validationPeriod
+        udf:
+          udf5: udf5
+          udf3: udf3
+          udf4: udf4
+          udf1: udf1
+          udf2: udf2
+        isPartialPaymentAllowed: true
+        adjustment: 6.027456183070403
+        viaSms: true
+        customer:
+          phone: "9876543210"
+          name: John
+          email: test@gmail.com
+        emailTemplateName: emailTemplateName
+        customAttributes:
+        - customAttributeName: customAttributeName
+          toolId: 9
+          entityType: entityType
+          attributeType: attributeType
+          options:
+          - options
+          - options
+          customAttributeId: 7
+          checked: true
+          required: true
+        - customAttributeName: customAttributeName
+          toolId: 9
+          entityType: entityType
+          attributeType: attributeType
+          options:
+          - options
+          - options
+          customAttributeId: 7
+          checked: true
+          required: true
+      properties:
+        invoiceNumber:
+          description: It is used for identifying a payment link. This must be alphanumeric.
+          example: INV8446471886220
+          type: string
+        isAmountFilledByCustomer:
+          description: |-
+            This parameter contains any of the following values to specify whether it is an open invoices (when customer fills amount) or fixed amount
+
+            true-It is an open invoice where the customer can fill the amount. The subamount parameter must be null in this case
+
+            false-It is closed invoice and amount is fixed
+          example: false
+          type: boolean
+        subAmount:
+          description: Payment Amount.The value must be greater than or equal to 1
+          example: 1000
+          format: double
+          type: number
+        tax:
+          description: ' tax amount for the payment transaction. This value must be
+            greater than zero.'
+          example: 10
+          format: double
+          type: number
+        shippingCharge:
+          description: ' shipping charges for delivering the goods. This value must
+            be greater than zero.'
+          example: 25
+          format: double
+          type: number
+        minAmountForCustomer:
+          description: ' minimum amount a customer needs to pay in case of partial
+            payment.'
+          example: 800
+          format: double
+          type: number
+        discount:
+          format: double
+          type: number
+        adjustment:
+          format: double
+          type: number
+        smsConfirm:
+          pattern: ^(\s*|\d{10,15})$
+          type: string
+        description:
+          description: description or purpose of creating the.payment link.
+          example: Car Insurance Premium
+          type: string
+        source:
+          description: source of payment generation.
+          example: API
+          type: string
+        isPartialPaymentAllowed:
+          type: boolean
+        currency:
+          description: currency details
+          example: INR
+          type: string
+        maxPaymentsAllowed:
+          format: int32
+          minimum: 1
+          type: integer
+        batchId:
+          type: string
+        expiryDate:
+          description: expiry date of the payment link (will be 365 days in all other
+            cases).
+          example: 2012-11-21 22:11:11
+          format: yyyy-MM-dd HH:mm:ss
+          type: string
+        scheduledFor:
+          type: string
+        viaEmail:
+          description: specify whether to directly send an email to customer upon
+            payment link generation or late
+          type: boolean
+        viaSms:
+          description: specify whether to directly send as SMS to customer upon payment
+            link generation or later
+          type: boolean
+        customer:
+          $ref: '#/components/schemas/CustomerDTO'
+        udf:
+          $ref: '#/components/schemas/UdfDTO'
+        address:
+          $ref: '#/components/schemas/AddressDTO'
+        emailTemplateName:
+          type: string
+        smsTemplateName:
+          type: string
+        validationPeriod:
+          type: string
+        timeUnit:
+          type: string
+        notes:
+          maxLength: 255
+          minLength: 0
+          type: string
+        successURL:
+          type: string
+        failureURL:
+          type: string
+        reminder:
+          $ref: '#/components/schemas/ReminderDTO'
+        customAttributes:
+          items:
+            $ref: '#/components/schemas/CustomAttributeDTO'
+          type: array
+        dropCategory:
+          pattern: '[ a-zA-Z0-9|,-]*'
+          type: string
+        enforcePayMethod:
+          pattern: '[ a-zA-Z0-9|,-]*'
+          type: string
+      required:
+      - description
+      - source
+      type: object
+    ReminderDTO:
+      example:
+        modes:
+        - modes
+        - modes
+        schedulingInterval: 13
+        reminderType: 5
+        timeUnit: 2
+      properties:
+        reminderType:
+          format: int32
+          type: integer
+        schedulingInterval:
+          format: int32
+          maximum: 24
+          minimum: 1
+          type: integer
+        timeUnit:
+          format: int32
+          type: integer
+        modes:
+          items:
+            type: string
+          type: array
+      type: object
+    UdfDTO:
+      example:
+        udf5: udf5
+        udf3: udf3
+        udf4: udf4
+        udf1: udf1
+        udf2: udf2
+      properties:
+        udf1:
+          type: string
+        udf2:
+          type: string
+        udf3:
+          type: string
+        udf4:
+          type: string
+        udf5:
+          type: string
+      type: object
+  securitySchemes:
+    OAuth2:
+      flows:
+        clientCredentials:
+          scopes:
+            read_payment_links: Grants read access
+            create_payment_links: Grants write access
+          tokenUrl: http://localhost:8087/token
+      type: oauth2
+
