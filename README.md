@@ -1,7 +1,7 @@
 # Payment Link SDK for Java
 
 The Payment Link SDK for Java enables you to easily work with Payment Link API of PayU by easily integrating this SDK within your base system.
-With our SDK, you do not need to worry about low level details for doing API integration and with few lines of code and a function calling, it can be done within few minutes.
+With our SDK, you do not need to worry about low level details for doing API integration and with few lines of code and a method calling, it can be done within few minutes.
 
 ## Features Supported
 Following features are supported in the Payment link Java SDK:
@@ -15,11 +15,13 @@ Following features are supported in the Payment link Java SDK:
 To get started with Payment Link, visit our [Developer Guide](https://devguide.payu.in/payment-links/payu-payment-links-api-integration)
 
 # Table of Contents
- 1. [Getting Started](#getting-started)
- 2. [Installation](#installation)
- 3. [Documentation for API Endpoints](#documentation-for-api-endpoints)
- 4. [Documentation for Models](#documentation-for-models)
- 5. [Documentation for Authorization](#documentation-for-authorization)
+ 1. [Requirements](#requirements)
+ 2. [Getting Started](#getting-started)
+ 3. [Installation](#installation)
+ 4. [Documentation for API Endpoints](#documentation-for-api-endpoints)
+ 5. [Documentation for Models](#documentation-for-models)
+ 6. [Documentation for Authorization](#documentation-for-authorization)
+ 7. [Recommendation](#recommendation)
 
 
 
@@ -28,6 +30,46 @@ To get started with Payment Link, visit our [Developer Guide](https://devguide.p
 Building the API client library requires:
 1. Java 1.7+
 2. Maven/Gradle
+
+## Getting Started
+
+Please follow the [installation](#installation) instruction and execute the following Java code:
+
+```java
+
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.auth.*;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.PaymentLinkApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost:8087");
+    
+    // Configure OAuth2 access token for authorization: OAuth2
+    OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
+    OAuth2.setAccessToken("YOUR ACCESS TOKEN");
+
+    PaymentLinkApi apiInstance = new PaymentLinkApi(defaultClient);
+    String id = "id_example"; // String | 
+    String mid = "mid_example"; // String | merchant identifier
+    StatusOrExpiryDTO statusOrExpiryDTO = new StatusOrExpiryDTO(); // StatusOrExpiryDTO | 
+    try {
+      ResultDTO result = apiInstance.changeStatusOrExpiry(id, mid, statusOrExpiryDTO);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PaymentLinkApi#changeStatusOrExpiry");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
 
 ## Installation
 
@@ -79,48 +121,6 @@ Then manually install the following JARs:
 * `target/openapi-java-client-v1.0.0.jar`
 * `target/lib/*.jar`
 
-## Getting Started
-
-Please follow the [installation](#installation) instruction and execute the following Java code:
-
-```java
-
-// Import classes:
-import org.openapitools.client.ApiClient;
-import org.openapitools.client.ApiException;
-import org.openapitools.client.Configuration;
-import org.openapitools.client.auth.*;
-import org.openapitools.client.models.*;
-import org.openapitools.client.api.PaymentLinkApi;
-
-public class Example {
-  public static void main(String[] args) {
-    ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("http://localhost:8087");
-    
-    // Configure OAuth2 access token for authorization: OAuth2
-    OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-    OAuth2.setAccessToken("YOUR ACCESS TOKEN");
-
-    PaymentLinkApi apiInstance = new PaymentLinkApi(defaultClient);
-    String id = "id_example"; // String | 
-    String mid = "mid_example"; // String | merchant identifier
-    StatusOrExpiryDTO statusOrExpiryDTO = new StatusOrExpiryDTO(); // StatusOrExpiryDTO | 
-    try {
-      ResultDTO result = apiInstance.changeStatusOrExpiry(id, mid, statusOrExpiryDTO);
-      System.out.println(result);
-    } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentLinkApi#changeStatusOrExpiry");
-      System.err.println("Status code: " + e.getCode());
-      System.err.println("Reason: " + e.getResponseBody());
-      System.err.println("Response headers: " + e.getResponseHeaders());
-      e.printStackTrace();
-    }
-  }
-}
-
-```
-
 ## Documentation for API Endpoints
 
 All URIs are relative to *http://localhost:8087*
@@ -168,8 +168,3 @@ Authentication schemes defined for the API:
 ## Recommendation
 
 It's recommended to create an instance of `ApiClient` per thread in a multithreaded environment to avoid any potential issues.
-
-## Author
-
-
-
