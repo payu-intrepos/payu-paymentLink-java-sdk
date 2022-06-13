@@ -155,7 +155,6 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Authorization
 
-Authentication schemes defined for the API:
 ### OAuth2
 
 - **Type**: OAuth
