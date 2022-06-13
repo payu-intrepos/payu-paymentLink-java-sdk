@@ -71,6 +71,7 @@ public class Example {
   }
 }
 
+```
 ## Installation
 
 To install the API client library to your local Maven repository, simply execute:
