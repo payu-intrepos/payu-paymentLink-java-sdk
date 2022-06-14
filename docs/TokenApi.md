@@ -30,10 +30,6 @@ public class Example {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost:8087");
     
-    // Configure OAuth2 access token for authorization: OAuth2
-    OAuth OAuth2 = (OAuth) defaultClient.getAuthentication("OAuth2");
-    OAuth2.setAccessToken("YOUR ACCESS TOKEN");
-
     TokenApi apiInstance = new TokenApi(defaultClient);
     String mid = "mid_example"; // String | merchant identifier
     ClientTokenDTO clientTokenDTO = new ClientTokenDTO(); // ClientTokenDTO | 
