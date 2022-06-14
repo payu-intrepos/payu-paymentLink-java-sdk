@@ -7,7 +7,8 @@ With our SDK, you do not need to worry about low level details for doing API int
 Following features are supported in the Payment link Java SDK:
  - Create Payment Link
  - Get Details of all Payment Links
- - Get Specific Payment Link
+ - Get Details of Specific Payment Link
+ - Get Summary of all Payment Links Created by a Particular Merchant
  - Share Payment Link with end Customer via email or sms
  - Get list of all Transactions done against a particular Payment Link
  - Change Status or Expiry of a Payment Link
